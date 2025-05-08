@@ -1,38 +1,7 @@
-# from django.urls import path, include
-# from rest_framework.routers import DefaultRouter
-# from .views import (
-#     SignupView, LoginView, LogoutView, UserInfoView,
-#     DriverViewSet, ClientViewSet, CarViewSet, JobPostViewSet,
-#     JobOfferViewSet, PaymentViewSet, RatingViewSet, ClientDriverChatViewSet,
-#     CarDocViewSet, NotificationViewSet, TripViewSet
-# )
-
-# router = DefaultRouter()
-# router.register(r'drivers', DriverViewSet)
-# router.register(r'clients', ClientViewSet)
-# router.register(r'cars', CarViewSet)
-# router.register(r'jobposts', JobPostViewSet)
-# router.register(r'joboffers', JobOfferViewSet)
-# router.register(r'payments', PaymentViewSet)
-# router.register(r'ratings', RatingViewSet)
-# router.register(r'chats', ClientDriverChatViewSet)
-# router.register(r'cardocs', CarDocViewSet)
-# router.register(r'notifications', NotificationViewSet)
-# router.register(r'trips', TripViewSet)
-
-# urlpatterns = [
-#     # Authentication endpoints
-#     path('auth/signup/', SignupView.as_view(), name='signup'),
-#     path('auth/login/', LoginView.as_view(), name='login'),
-#     path('auth/logout/', LogoutView.as_view(), name='logout'),
-#     path('auth/user/', UserInfoView.as_view(), name='user-info'),
-#     # Model endpoints
-#     path('', include(router.urls)),
-# ]
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
-
+#we need to shift to restframework_simpleJWT
 router = DefaultRouter()
 router.register(r'drivers', DriverViewSet, basename='driver')
 router.register(r'clients', ClientViewSet, basename='client')

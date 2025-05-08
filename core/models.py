@@ -3,6 +3,14 @@ from django.contrib.auth.models import AbstractUser
 import uuid
 from django.db.models import Q, F
 from django.core.exceptions import ValidationError
+from decimal import Decimal
+from django.db import transaction
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.utils import timezone
+import datetime
+from dateutil.relativedelta import relativedelta
+
 # Base model for automatic timestamping.
 class Timer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -241,3 +249,16 @@ class Trip(Timer):
     is_delivered=models.BooleanField(default=False)
     def __str__(self):
         return f"Trip: {self.job_offer.job_post.title}"
+class DemoRequest(models.Model):
+    full_name   = models.CharField(max_length=150)
+    email       = models.EmailField()
+    company     = models.CharField(max_length=150, blank=True)
+    phone       = models.CharField(max_length=20, blank=True)
+    datetime    = models.DateTimeField(null=True, blank=True)
+    message     = models.TextField(blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} <{self.email}> @ {self.created_at:%Y-%m-%d %H:%M}"
+
+

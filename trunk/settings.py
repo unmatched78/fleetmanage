@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 import sys
@@ -45,9 +46,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "core",
-    #"cloudinary",
+    "cloudinary",
     'rest_framework',
     'rest_framework.authtoken',
+    "rest_framework_simplejwt.token_blacklist",
     #'django_q',
     'corsheaders',
 ]
@@ -94,6 +96,7 @@ DATABASES = {
     }
 }
 CORS_ALLOW_ALL_ORIGINS = True
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  
 EMAIL_HOST = 'smtp.gmail.com'  
 EMAIL_PORT = 587  
@@ -101,34 +104,44 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Your Gmail address  
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Use an App Password for increased security  
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+#cloudinary settings
+cloudinary.config(
+    cloud_name = '',        # Replace with your cloud name
+    api_key = '',              # Replace with your API key
+    api_secret = ''         # Replace with your API secret
+)
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-#     },
-#     {
-#         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-#     },
-#     {
-#         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-#     },
-#     {
-#         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-#     },
-# ]
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
 
 # settings.py
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
 # Session settings
-# SESSION_COOKIE_AGE = 1800  # Session lasts for 30 minutes
-# SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Keep session even if browser is closed (if desired)
-# SESSION_SAVE_EVERY_REQUEST = True  # Refresh session on each request
+SESSION_COOKIE_AGE = 1800  # Session lasts for 30 minutes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even if browser is closed (if desired)
+SESSION_SAVE_EVERY_REQUEST = False  # Refresh session on each request
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

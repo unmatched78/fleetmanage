@@ -1,15 +1,6 @@
 from django.contrib import admin
-from.models import*
-admin.site.register(Driver)
-admin.site.register(Client)
-admin.site.register(Car)
-admin.site.register(JobPost)
-admin.site.register(JobBid)
-admin.site.register(JobOffer)
-admin.site.register(Payment)
-admin.site.register(Rating)
-admin.site.register(ChatRoom)
-admin.site.register(ClientDriverChat)
-admin.site.register(CarDoc)
-admin.site.register(Notification)
-admin.site.register(Trip)
+from django.apps import apps
+
+app_models = apps.get_app_config('core').get_models()#_your_app_shoudl be called
+for model in app_models:
+    admin.site.register(model)

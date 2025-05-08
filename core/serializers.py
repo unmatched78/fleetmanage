@@ -11,6 +11,7 @@ ROLE_CHOICES = [
     ("client", "Client"),
 ]
 
+
 class UserSignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     phone = serializers.CharField(required=True)
@@ -122,27 +123,6 @@ class ClientDriverChatSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can only chat if you are the job's client or a bidding driver.")
 
         return data
-
-# class ClientDriverChatSerializer(serializers.ModelSerializer):
-#     chat_id = serializers.UUIDField(read_only=True)
-#     created_at = serializers.DateTimeField(read_only=True)
-
-#     class Meta:
-#         model = ClientDriverChat
-#         fields = ["chat_id", "job_post", "driver", "client", "sender", "receiver", "message", "read_status", "created_at"]
-#         read_only_fields = ["chat_id", "created_at", "sender", "receiver"]
-
-#     def validate(self, data):
-#         """Ensure sender is either the client or the driver of the job post."""
-#         user = self.context["request"].user
-#         job_post = data["job_post"]
-#         client = job_post.client
-#         driver = data["driver"]
-
-#         if user not in [client.user, driver.user]:
-#             raise serializers.ValidationError("You can only chat if you are the job's client or a bidding driver.")
-
-#         return data
 
 
 class CarDocSerializer(serializers.ModelSerializer):
