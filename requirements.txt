@@ -1,8 +1,7 @@
 djangorestframework          
 Django                       
 django-cors-headers         
-cloudinary                   
-celery                      
+cloudinary                                       
 gunicorn
 pillow 
 requests  
