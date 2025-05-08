@@ -158,4 +158,4 @@ Content-Type: application/json
 
 ## 8. Need Help?
 
-If you encounter issues or have questions, please open a GitHub issue or reach out to the maintainer. Happy coding!
+If you encounter issues or have questions, please let me know. Happy coding!
