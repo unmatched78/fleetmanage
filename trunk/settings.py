@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 }
 # Session settings
 SESSION_COOKIE_AGE = 1800  # Session lasts for 30 minutes
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even if browser is closed (if desired)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session even if browser is closed 
 SESSION_SAVE_EVERY_REQUEST = False  # Refresh session on each request
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
