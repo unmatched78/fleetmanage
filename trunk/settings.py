@@ -85,7 +85,7 @@ import dj_database_url
 
 
 DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL)
+    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
