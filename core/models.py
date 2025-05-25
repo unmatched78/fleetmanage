@@ -38,7 +38,7 @@ class Driver(Timer):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
     license_number = models.CharField(max_length=100)
     frequent_location = models.CharField(max_length=100, blank=True, null=True)
-    personalID=models.ImageField(upload_to="ID")
+    personalID = models.ImageField(upload_to="ID")
     
     def __str__(self):
         return self.user.username
