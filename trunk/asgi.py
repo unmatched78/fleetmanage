@@ -4,4 +4,4 @@ from django.core.asgi import get_asgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "trunk.settings")
 
-application = get_asgi_application()
+application = get_asgi_application() #for vercel compatibility
