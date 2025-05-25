@@ -101,7 +101,6 @@ class RatingSerializer(serializers.ModelSerializer):
         model = Rating
         fields = ['job_offer', 'rating', 'driver', 'comment', 'client', 'created_at', 'updated_at']
 from rest_framework import serializers
-from .models import ClientDriverChat, ChatRoom
 
 class ClientDriverChatSerializer(serializers.ModelSerializer):
     chat_id = serializers.UUIDField(read_only=True)
