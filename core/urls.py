@@ -22,7 +22,7 @@ urlpatterns = [
     path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('auth/user/', UserInfoView.as_view(), name='user-info'),
-    # Public endpoint for pending job posts (accessible to anyone)
+    # Public endpoint for pending job posts
     path('public/jobposts/', PublicJobPostListView.as_view(), name='public-jobposts'),
     # Model endpoints
     path('', include(router.urls)),
