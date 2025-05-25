@@ -14,6 +14,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG_MODE')
+
 AUTH_USER_MODEL = 'core.CustomUser'  
 
 ALLOWED_HOSTS = ["*"]
