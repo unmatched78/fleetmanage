@@ -101,7 +101,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 cloudinary.config(
     cloud_name = os.getenv('cloudinary_cloud_name')       
     api_key = os.getenv('cloudinary_api_key')      
-    api_secret = os.getenv('cloudinary_api_secret')         # Replace with your API secret
+    api_secret = os.getenv('cloudinary_api_secret')  
 )
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
