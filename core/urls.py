@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import *
-#we need to shift to restframework_simpleJWT
+
 router = DefaultRouter()
 router.register(r'drivers', DriverViewSet, basename='driver')
 router.register(r'clients', ClientViewSet, basename='client')
