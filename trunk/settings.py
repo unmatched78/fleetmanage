@@ -15,6 +15,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 AUTH_USER_MODEL = 'core.CustomUser'  
+
 ALLOWED_HOSTS = ["*"]
 # ALLOWED_HOSTS = [
 #     'weasel-popular-terribly.ngrok-free.app',
