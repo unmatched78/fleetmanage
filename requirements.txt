@@ -8,4 +8,4 @@ requests
 python-dotenv 
 djangorestframework-simplejwt
 django-react
-database-url
+dj-database-url
