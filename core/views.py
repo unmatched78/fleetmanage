@@ -271,47 +271,6 @@ class ClientDriverChatViewSet(viewsets.ModelViewSet):
         return Response({"status": "Message marked as read."})
 
 
-# class ClientDriverChatViewSet(viewsets.ModelViewSet):
-#     serializer_class = ClientDriverChatSerializer
-#     authentication_classes = [TokenAuthentication]
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get_queryset(self):
-#         """Filter chats where the current user is either the sender or receiver."""
-#         return ClientDriverChat.objects.filter(
-#             Q(sender=self.request.user) | Q(receiver=self.request.user)
-#         ).select_related("job_post", "client", "driver")
-
-#     def perform_create(self, serializer):
-#         """Automatically set the sender, enforce rules, and prevent duplicate chats."""
-#         user = self.request.user
-#         job_post = serializer.validated_data["job_post"]
-#         client = job_post.client
-#         driver = serializer.validated_data["driver"]
-
-#         if user not in [client.user, driver.user]:
-#             raise PermissionDenied("You can only chat if you are the job's client or a bidding driver.")
-
-#         # Ensure the receiver is correctly assigned
-#         receiver = client.user if user == driver.user else driver.user
-
-#         # Prevent duplicate chat entries for the same job post
-#         existing_chat = ClientDriverChat.objects.filter(job_post=job_post, client=client, driver=driver).exists()
-#         if existing_chat:
-#             raise ValidationError("A chat between this client and driver for this job already exists.")
-
-#         serializer.save(sender=user, receiver=receiver)
-
-#     @action(detail=True, methods=["POST"], permission_classes=[permissions.IsAuthenticated])
-#     def mark_as_read(self, request, pk=None):
-#         """Mark a chat message as read."""
-#         chat = self.get_object()
-#         chat.mark_as_read()
-#         return Response({"status": "Message marked as read."})
-
-
-
-
 class CarDocViewSet(viewsets.ModelViewSet):
     serializer_class = CarDocSerializer
     authentication_classes = [TokenAuthentication]
