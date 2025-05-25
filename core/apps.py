@@ -6,5 +6,3 @@ class CoreConfig(AppConfig):
     name = "core"
     def ready(self):
         import core.signals
-        #import core.roles  # Ensure roles are loaded  if necessary
-        #import core.permissions  # Ensure permissions are loaded if necessary
