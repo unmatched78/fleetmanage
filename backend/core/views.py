@@ -1,61 +1,56 @@
+
+from datetime import date, timedelta
+from rest_framework import viewsets, permissions, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-from rest_framework import status, viewsets,permissions
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import ListAPIView  
 from .serializers import *
 from .models import *
-from rest_framework.decorators import action  
 User = get_user_model()
-
-# --- Authentication Views ---
-
-class SignupView(APIView):
-    permission_classes = [AllowAny]
-
-    def post(self, request):
-        serializer = UserSignupSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({
-                "message": "User registered successfully.",
-                "user": UserSerializer(user).data,
-                "token": token.key
-            }, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# core/views.py
 
 
-class LoginView(APIView):
-    permission_classes = [AllowAny]
 
-    def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            username = serializer.validated_data.get("username")
-            password = serializer.validated_data.get("password")
-            user = User.objects.filter(username=username).first()
-            if user and user.check_password(password):
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({
-                    "message": "Logged in successfully.",
-                    "token": token.key
-                }, status=status.HTTP_200_OK)
-            return Response({"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    """
+    Extends SimpleJWT to include user info in the token response.
+    """
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        return {
+            "tokens": {
+                "refresh": data["refresh"],
+                "access": data["access"],
+            },
+            "user": {
+                "id": self.user.id,
+                "username": self.user.username,
+            },
+        }
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+        token["user_id"] = user.id
+        return token
 
 
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        request.auth.delete()
-        return Response({"message": "Logged out successfully."}, status=status.HTTP_200_OK)
+class MyTokenObtainPairView(TokenObtainPairView):
+    """
+    POST /api/auth/token/  -> { tokens: { refresh, access }, user: {...} }
+    """
+    serializer_class = MyTokenObtainPairSerializer
 
 
 class UserInfoView(APIView):
