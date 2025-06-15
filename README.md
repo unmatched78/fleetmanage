@@ -297,7 +297,6 @@ This project is MIT licensed – see [LICENSE](LICENSE).
 
 - **Backend API Docs**: [Link to Django REST API documentation]  
 - **Issue Tracking**: Create GitHub Issues for bugs/enhancements  
-- **Communication**: Slack (channel: `#fleet-frontend`)  
 - **Maintainers**: @team-frontend  
 
 ---
