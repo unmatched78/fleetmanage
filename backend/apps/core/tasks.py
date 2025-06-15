@@ -1,1 +1,0 @@
-#future celery implementations
