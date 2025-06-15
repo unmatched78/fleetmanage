@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -78,19 +76,19 @@ function LandingPageContent() {
 
         {/* Desktop menu */}
         <div className="hidden md:flex items-center space-x-4 lg:space-x-8">
-          <Link href="#features" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
+          <Link to="#features" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
             {t("nav.features")}
           </Link>
-          <Link href="#how-it-works" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
+          <Link to="#how-it-works" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
             {t("nav.howItWorks")}
           </Link>
-          <Link href="#pricing" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
+          <Link to="#pricing" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
             {t("nav.pricing")}
           </Link>
-          <Link href="#testimonials" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
+          <Link to="#testimonials" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
             {t("nav.reviews")}
           </Link>
-          <Link href="#contact" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
+          <Link to="#contact" className="text-gray-300 hover:text-white transition-colors text-sm lg:text-base">
             {t("nav.contact")}
           </Link>
           <ThemeToggle />
@@ -105,35 +103,35 @@ function LandingPageContent() {
           <div className="absolute top-full left-0 right-0 md:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
             <div className="px-4 py-6 space-y-4">
               <Link
-                href="#features"
+                to="#features"
                 className="block text-gray-300 hover:text-white transition-colors text-lg py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("nav.features")}
               </Link>
               <Link
-                href="#how-it-works"
+                to="#how-it-works"
                 className="block text-gray-300 hover:text-white transition-colors text-lg py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("nav.howItWorks")}
               </Link>
               <Link
-                href="#pricing"
+                to="#pricing"
                 className="block text-gray-300 hover:text-white transition-colors text-lg py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("nav.pricing")}
               </Link>
               <Link
-                href="#testimonials"
+                to="#testimonials"
                 className="block text-gray-300 hover:text-white transition-colors text-lg py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("nav.reviews")}
               </Link>
               <Link
-                href="#contact"
+                to="#contact"
                 className="block text-gray-300 hover:text-white transition-colors text-lg py-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -895,22 +893,22 @@ function LandingPageContent() {
               <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">{t("footer.product")}</h3>
               <ul className="space-y-2 text-gray-400 dark:text-gray-300 text-xs sm:text-sm">
                 <li>
-                  <Link href="#features" className="hover:text-white transition-colors">
+                  <Link to="#features" className="hover:text-white transition-colors">
                     {t("nav.features")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#pricing" className="hover:text-white transition-colors">
+                  <Link to="#pricing" className="hover:text-white transition-colors">
                     {t("nav.pricing")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     API
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     Integrations
                   </Link>
                 </li>
@@ -921,22 +919,22 @@ function LandingPageContent() {
               <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">{t("footer.company")}</h3>
               <ul className="space-y-2 text-gray-400 dark:text-gray-300 text-xs sm:text-sm">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.about")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.blog")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.careers")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#contact" className="hover:text-white transition-colors">
+                  <Link to="#contact" className="hover:text-white transition-colors">
                     {t("nav.contact")}
                   </Link>
                 </li>
@@ -947,22 +945,22 @@ function LandingPageContent() {
               <h3 className="text-white font-semibold mb-3 sm:mb-4 text-sm sm:text-base">{t("footer.support")}</h3>
               <ul className="space-y-2 text-gray-400 dark:text-gray-300 text-xs sm:text-sm">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.helpCenter")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.documentation")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.status")}
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link to="#" className="hover:text-white transition-colors">
                     {t("footer.community")}
                   </Link>
                 </li>
@@ -973,19 +971,19 @@ function LandingPageContent() {
           <div className="flex flex-col sm:flex-row justify-between items-center pt-6 sm:pt-8 border-t border-white/10 dark:border-white/5 space-y-4 sm:space-y-0">
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
               <Link
-                href="#"
+                to="#"
                 className="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-xs sm:text-sm"
               >
                 {t("footer.privacy")}
               </Link>
               <Link
-                href="#"
+                to="#"
                 className="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-xs sm:text-sm"
               >
                 {t("footer.terms")}
               </Link>
               <Link
-                href="#"
+                to="#"
                 className="text-gray-400 dark:text-gray-300 hover:text-white transition-colors text-xs sm:text-sm"
               >
                 {t("footer.cookies")}
