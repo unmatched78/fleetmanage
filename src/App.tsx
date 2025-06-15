@@ -7,7 +7,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import NotesPage from './pages/NotesPage';
-
+import Page from './pages/Home'
 function App() {
   const { user } = useAuth();
 
@@ -35,6 +35,14 @@ function App() {
           element={
             <PrivateRoute>
               <NotesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <Page />
             </PrivateRoute>
           }
         />
