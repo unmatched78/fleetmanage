@@ -20,13 +20,13 @@ function App() {
         {/* If already logged in, redirect /login → /notes */}
         <Route
           path="/login"
-          element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />}
+          element={user ? <Navigate to="/home" replace /> : <LoginPage />}
         />
 
         {/* If already logged in, redirect /register → /notes */}
         <Route
           path="/register"
-          element={user ? <Navigate to="/dashboard" replace /> : <RegisterPage />}
+          element={user ? <Navigate to="/home" replace /> : <RegisterPage />}
         />
 
         {/* Protected /notes */}
