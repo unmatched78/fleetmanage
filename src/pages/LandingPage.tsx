@@ -93,9 +93,10 @@ function LandingPageContent() {
           </Link>
           <ThemeToggle />
           <LanguageDropdown />
+          <Link to="/login" >
           <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-sm lg:text-base px-4 lg:px-6">
             {t("nav.getStarted")}
-          </Button>
+          </Button></Link>
         </div>
 
         {/* Mobile menu */}
