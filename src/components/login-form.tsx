@@ -1,31 +1,64 @@
-// import { cn } from "@/lib/utils"
-// import { Button } from "@/components/ui/button"
-// import { Card, CardContent } from "@/components/ui/card"
-// import { Input } from "@/components/ui/input"
-// import { Label } from "@/components/ui/label"
+// // src/components/login-form.tsx
+// import { cn } from "@/lib/utils";
+// import { Button } from "@/components/ui/button";
+// import { Card, CardContent } from "@/components/ui/card";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import { useState } from "react";
+// import { useAuth } from "../context/AuthContext";
+// import { toast } from "react-hot-toast";
+// import { useNavigate } from "react-router-dom";
 
 // export function LoginForm({
 //   className,
 //   ...props
 // }: React.ComponentProps<"div">) {
+//   const [identifier, setIdentifier] = useState("");
+//   const [password, setPassword] = useState("");
+//   const { login, loading } = useAuth();
+//   const navigate = useNavigate();
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (!identifier || !password) {
+//       toast.error("Please enter both username/email and password.");
+//       return;
+//     }
+
+//     try {
+//       await login({ identifier, password });
+//       navigate("/dashboard", { replace: true });
+//     } catch (err: any) {
+//       if (err.response && err.response.data) {
+//         const errors = err.response.data;
+//         const errorMessage = errors.detail || Object.values(errors).flat().join(" ");
+//         toast.error(errorMessage);
+//       } else {
+//         toast.error("Login failed. Please try again.");
+//       }
+//     }
+//   };
+
 //   return (
 //     <div className={cn("flex flex-col gap-6", className)} {...props}>
 //       <Card className="overflow-hidden p-0">
 //         <CardContent className="grid p-0 md:grid-cols-2">
-//           <form className="p-6 md:p-8">
+//           <form className="p-6 md:p-8" onSubmit={handleSubmit}>
 //             <div className="flex flex-col gap-6">
 //               <div className="flex flex-col items-center text-center">
 //                 <h1 className="text-2xl font-bold">Welcome back</h1>
 //                 <p className="text-muted-foreground text-balance">
-//                   Login to your Acme Inc account
+//                   Login to your Truck Cargo account
 //                 </p>
 //               </div>
 //               <div className="grid gap-3">
-//                 <Label htmlFor="email">Email</Label>
+//                 <Label htmlFor="identifier">Username or Email</Label>
 //                 <Input
-//                   id="email"
-//                   type="email"
-//                   placeholder="m@example.com"
+//                   id="identifier"
+//                   type="text"
+//                   placeholder="username or m@example.com"
+//                   value={identifier}
+//                   onChange={(e) => setIdentifier(e.target.value)}
 //                   required
 //                 />
 //               </div>
@@ -39,10 +72,16 @@
 //                     Forgot your password?
 //                   </a>
 //                 </div>
-//                 <Input id="password" type="password" required />
+//                 <Input
+//                   id="password"
+//                   type="password"
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                   required
+//                 />
 //               </div>
-//               <Button type="submit" className="w-full">
-//                 Login
+//               <Button type="submit" className="w-full" disabled={loading}>
+//                 {loading ? "Logging in…" : "Login"}
 //               </Button>
 //               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
 //                 <span className="bg-card text-muted-foreground relative z-10 px-2">
@@ -79,7 +118,7 @@
 //                 </Button>
 //               </div>
 //               <div className="text-center text-sm">
-//                 Don&apos;t have an account?{" "}
+//                 Don’t have an account?{" "}
 //                 <a href="/register" className="underline underline-offset-4">
 //                   Sign up
 //                 </a>
@@ -100,7 +139,7 @@
 //         and <a href="#">Privacy Policy</a>.
 //       </div>
 //     </div>
-//   )
+//   );
 // }
 // src/components/login-form.tsx
 import { cn } from "@/lib/utils";
@@ -117,29 +156,41 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [identifier, setIdentifier] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!identifier || !password) {
-      toast.error("Please enter both username/email and password.");
+    if (!username || !password) {
+      toast.error("Please enter both username and password.");
       return;
     }
 
     try {
-      await login({ identifier, password });
+      await login(username.trim(), password);
+      toast.success("Login successful!");
       navigate("/dashboard", { replace: true });
     } catch (err: any) {
-      if (err.response && err.response.data) {
+      console.log("Full error:", err);
+      console.log("Error response:", err.response?.data);
+      let errorMessage = "Login failed. Please try again.";
+      if (err.response?.data) {
         const errors = err.response.data;
-        const errorMessage = errors.detail || Object.values(errors).flat().join(" ");
-        toast.error(errorMessage);
-      } else {
-        toast.error("Login failed. Please try again.");
+        if (errors.username) {
+          errorMessage = Array.isArray(errors.username) ? errors.username[0] : errors.username;
+        } else if (errors.password) {
+          errorMessage = Array.isArray(errors.password) ? errors.password[0] : errors.password;
+        } else if (errors.non_field_errors) {
+          errorMessage = Array.isArray(errors.non_field_errors) ? errors.non_field_errors[0] : errors.non_field_errors;
+        } else if (typeof errors === "string") {
+          errorMessage = errors;
+        } else {
+          errorMessage = Object.values(errors).flat().join(" ") || errorMessage;
+        }
       }
+      toast.error(errorMessage);
     }
   };
 
@@ -156,13 +207,13 @@ export function LoginForm({
                 </p>
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="identifier">Username or Email</Label>
+                <Label htmlFor="username">Username</Label>
                 <Input
-                  id="identifier"
+                  id="username"
                   type="text"
-                  placeholder="username or m@example.com"
-                  value={identifier}
-                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>

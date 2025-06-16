@@ -1,28 +1,16 @@
 // // src/context/AuthContext.tsx
-// import {
-//   createContext,
-//   useContext,
-//   useEffect,
-//   useState,
-// } from 'react';
-// import type { ReactNode} from 'react';
-// import {
-//   loginUser,
-//   registerUser,
-//   logoutUser as apiLogout,
-//   fetchCurrentUser,
-// } from '../api/auth';
-// import type {
-//   UserData
-// } from '../api/auth';
-// import { getStoredAccessToken, getStoredRefreshToken, clearTokens } from '../api/api';
+// import { createContext, useContext, useEffect, useState } from "react";
+// import type { ReactNode } from "react";
+// import { loginUser, registerUser, logoutUser as apiLogout, fetchCurrentUser } from "../api/auth";
+// import type { RegisterData, UserData } from "../api/auth";
+// import { getStoredAccessToken, getStoredRefreshToken, clearTokens } from "../api/api";
 
 // interface AuthContextType {
 //   user: UserData | null;
 //   accessToken: string | null;
 //   loading: boolean;
-//   login: (username: string, password: string) => Promise<void>;
-//   register: (username: string, password: string) => Promise<void>;
+//   login: (identifier: string, password: string) => Promise<void>;
+//   register: (data: RegisterData) => Promise<void>;
 //   logout: () => void;
 // }
 
@@ -30,7 +18,7 @@
 
 // export function useAuth(): AuthContextType {
 //   const ctx = useContext(AuthContext);
-//   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+//   if (!ctx) throw new Error("useAuth must be used within AuthProvider");
 //   return ctx;
 // }
 
@@ -40,12 +28,9 @@
 
 // export function AuthProvider({ children }: AuthProviderProps) {
 //   const [user, setUser] = useState<UserData | null>(null);
-//   const [accessToken, setAccessToken] = useState<string | null>(
-//     getStoredAccessToken()
-//   );
+//   const [accessToken, setAccessToken] = useState<string | null>(getStoredAccessToken());
 //   const [loading, setLoading] = useState<boolean>(true);
 
-//   // 1) On mount, if tokens exist, try to fetchCurrentUser
 //   useEffect(() => {
 //     async function initialize() {
 //       const token = getStoredAccessToken();
@@ -66,11 +51,10 @@
 //     initialize();
 //   }, []);
 
-//   // 2) login(): call loginUser(), then fetchCurrentUser()
-//   async function login(username: string, password: string) {
+//   async function login(identifier: string, password: string) {
 //     setLoading(true);
 //     try {
-//       const { access } = await loginUser({ username, password });
+//       const { access } = await loginUser({ identifier, password });
 //       setAccessToken(access);
 //       const userData = await fetchCurrentUser();
 //       setUser(userData);
@@ -83,11 +67,10 @@
 //     }
 //   }
 
-//   // 3) register(): call registerUser(), then fetchCurrentUser()
-//   async function register(username: string, password: string) {
+//   async function register(data: RegisterData) {
 //     setLoading(true);
 //     try {
-//       const { access } = await registerUser({ username, password });
+//       const { access } = await registerUser(data);
 //       setAccessToken(access);
 //       const userData = await fetchCurrentUser();
 //       setUser(userData);
@@ -100,7 +83,6 @@
 //     }
 //   }
 
-//   // 4) logout(): clear tokens + context state
 //   function logout() {
 //     apiLogout();
 //     setUser(null);
@@ -129,7 +111,7 @@ interface AuthContextType {
   user: UserData | null;
   accessToken: string | null;
   loading: boolean;
-  login: (identifier: string, password: string) => Promise<void>;
+  login: (username: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
 }
@@ -171,13 +153,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initialize();
   }, []);
 
-  async function login(identifier: string, password: string) {
+  async function login(username: string, password: string) {
     setLoading(true);
     try {
-      const { access } = await loginUser({ identifier, password });
-      setAccessToken(access);
-      const userData = await fetchCurrentUser();
-      setUser(userData);
+      const { tokens, user } = await loginUser({ username, password });
+      setAccessToken(tokens.access);
+      setUser(user);
     } catch (err) {
       setUser(null);
       setAccessToken(null);
@@ -190,10 +171,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function register(data: RegisterData) {
     setLoading(true);
     try {
-      const { access } = await registerUser(data);
-      setAccessToken(access);
-      const userData = await fetchCurrentUser();
-      setUser(userData);
+      const { tokens, user } = await registerUser(data);
+      setAccessToken(tokens.access);
+      setUser(user);
     } catch (err) {
       setUser(null);
       setAccessToken(null);
