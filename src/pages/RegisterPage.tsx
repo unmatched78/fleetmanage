@@ -168,7 +168,7 @@ export default function RegisterPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="Enter phone number"
-                        defaultCountry="US" // Adjust as needed
+                        defaultCountry="RW" // Adjust as needed
                         required
                       />
                     </div>
