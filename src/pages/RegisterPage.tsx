@@ -1,124 +1,129 @@
 // src/pages/RegisterPage.tsx
-import { useState } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/select';
-import { PhoneInput } from '@/components/PhoneInput'; // Assuming PhoneInput is saved here
-import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
-import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
+} from "@/components/ui/select";
+import { PhoneInput } from "@/components/PhoneInput";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function RegisterPage() {
-  // Form state
   const [step, setStep] = useState(1);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [role, setRole] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [licenseNumber, setLicenseNumber] = useState('');
-  const [frequentLocation, setFrequentLocation] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [role, setRole] = useState<"driver" | "client" | "">("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [license_number, setLicenseNumber] = useState("");
+  const [frequent_location, setFrequentLocation] = useState("");
   const [personalID, setPersonalID] = useState<File | null>(null);
 
-  // Auth and navigation
   const { register, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
+  const from = (location.state as any)?.from?.pathname || "/dashboard";
 
-  // Handle role change
-  const handleRoleChange = (newRole: string) => {
+  const handleRoleChange = (newRole: "driver" | "client") => {
     setRole(newRole);
-    if (newRole === 'client') {
-      setLicenseNumber('');
-      setFrequentLocation('');
+    if (newRole === "client") {
+      setLicenseNumber("");
+      setFrequentLocation("");
       setPersonalID(null);
     }
   };
 
-  // Validate current step
   const validateStep = () => {
     if (step === 1) {
       if (!username || !email || !phone || !role) {
-        toast.error('Please fill out all required fields.');
+        toast.error("Please fill out all required fields.");
+        return false;
+      }
+      if (!email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
+        toast.error("Please enter a valid email address.");
         return false;
       }
     } else if (step === 2) {
       if (!password || !confirmPassword) {
-        toast.error('Please enter both password fields.');
+        toast.error("Please enter both password fields.");
         return false;
       }
       if (password !== confirmPassword) {
-        toast.error('Passwords do not match.');
+        toast.error("Passwords do not match.");
         return false;
       }
-    } else if (step === 3 && role === 'driver') {
-      if (!licenseNumber || !frequentLocation || !personalID) {
-        toast.error('Please provide all driver information.');
+      if (password.length < 8) {
+        toast.error("Password must be at least 8 characters long.");
+        return false;
+      }
+    } else if (step === 3 && role === "driver") {
+      if (!license_number || !frequent_location || !personalID) {
+        toast.error("Please provide all driver information.");
+        return false;
+      }
+      if (!personalID.type.startsWith("image/")) {
+        toast.error("Personal ID must be an image file.");
         return false;
       }
     }
     return true;
   };
 
-  // Handle next step
   const handleNext = () => {
     if (validateStep()) {
-      if (step === 1 && role === 'client') {
-        setStep(2); // Skip driver step for clients
-      } else if (step < (role === 'driver' ? 3 : 2)) {
+      if (step === 1 && role === "client") {
+        setStep(2);
+      } else if (step < (role === "driver" ? 3 : 2)) {
         setStep(step + 1);
       }
     }
   };
 
-  // Handle previous step
   const handlePrevious = () => {
-    if (step === 2 && role === 'client') {
+    if (step === 2 && role === "client") {
       setStep(1);
     } else if (step > 1) {
       setStep(step - 1);
     }
   };
 
-  // Handle form submission
   async function handleRegister() {
     if (!validateStep()) return;
 
     try {
-      const regData = {
+      const regData: RegisterData = {
         username,
         email,
         phone,
-        role,
+        role: role as "driver" | "client",
         password,
-        ...(role === 'driver' && {
-          licenseNumber,
-          frequentLocation,
+        ...(role === "driver" && {
+          license_number,
+          frequent_location,
           personalID,
         }),
       };
 
       await register(regData);
+      toast.success("Registration successful!");
       navigate(from, { replace: true });
     } catch (err: any) {
-      if (err.response && err.response.data) {
-        const errors = err.response.data;
-        const errorMessage = errors.detail || Object.values(errors).flat().join(' ');
+      if (err.response?.data?.error?.details) {
+        const errors = err.response.data.error.details;
+        const errorMessage = Object.values(errors).flat().join(" ") || "Registration failed.";
         toast.error(errorMessage);
       } else {
-        toast.error('Registration failed. Please try again.');
+        toast.error("Registration failed. Please try again.");
       }
     }
   }
@@ -133,11 +138,15 @@ export default function RegisterPage() {
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Create Your Account</h1>
                   <p className="text-muted-foreground text-balance">
-                    Step {step} of {role === 'driver' ? 3 : 2}: {step === 1 ? 'Account Details' : step === 2 ? 'Password Setup' : 'Driver Information'}
+                    Step {step} of {role === "driver" ? 3 : 2}:{" "}
+                    {step === 1
+                      ? "Account Details"
+                      : step === 2
+                      ? "Password Setup"
+                      : "Driver Information"}
                   </p>
                 </div>
 
-                {/* Step 1: Account Details */}
                 {step === 1 && (
                   <div className="grid gap-4">
                     <div className="grid gap-2">
@@ -168,7 +177,7 @@ export default function RegisterPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="Enter phone number"
-                        defaultCountry="RW" // Adjust as needed
+                        defaultCountry="RW"
                         required
                       />
                     </div>
@@ -187,7 +196,6 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                {/* Step 2: Password Setup */}
                 {step === 2 && (
                   <div className="grid gap-4">
                     <div className="grid gap-2">
@@ -215,15 +223,14 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                {/* Step 3: Driver Information */}
-                {step === 3 && role === 'driver' && (
+                {step === 3 && role === "driver" && (
                   <div className="grid gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="license-number">License Number</Label>
                       <Input
                         id="license-number"
                         placeholder="Enter license number"
-                        value={licenseNumber}
+                        value={license_number}
                         onChange={(e) => setLicenseNumber(e.target.value)}
                         required
                       />
@@ -233,7 +240,7 @@ export default function RegisterPage() {
                       <Input
                         id="frequent-location"
                         placeholder="Enter frequent location"
-                        value={frequentLocation}
+                        value={frequent_location}
                         onChange={(e) => setFrequentLocation(e.target.value)}
                         required
                       />
@@ -251,27 +258,25 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                {/* Navigation Buttons */}
                 <div className="flex justify-between mt-6">
                   {step > 1 && (
                     <Button variant="outline" onClick={handlePrevious} disabled={loading}>
                       Previous
                     </Button>
                   )}
-                  {step < (role === 'driver' ? 3 : 2) ? (
+                  {step < (role === "driver" ? 3 : 2) ? (
                     <Button onClick={handleNext} disabled={loading} className="ml-auto">
                       Next
                     </Button>
                   ) : (
                     <Button onClick={handleRegister} disabled={loading} className="ml-auto">
-                      {loading ? 'Registering…' : 'Register'}
+                      {loading ? "Registering…" : "Register"}
                     </Button>
                   )}
                 </div>
 
-                {/* Footer Links */}
                 <div className="text-center text-sm">
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <Link to="/login" className="underline underline-offset-4">
                     Login here
                   </Link>
@@ -288,7 +293,7 @@ export default function RegisterPage() {
           </CardContent>
         </Card>
         <div className="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4 mt-6">
-          By clicking continue, you agree to our <a href="#">Terms of Service</a>{' '}
+          By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
           and <a href="#">Privacy Policy</a>.
         </div>
       </div>

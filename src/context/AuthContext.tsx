@@ -118,27 +118,18 @@
 
 //   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 // }
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
-import type { ReactNode } from 'react';
-import {
-  loginUser,
-  registerUser,
-  logoutUser as apiLogout,
-  fetchCurrentUser,
-} from '../api/auth';
-import type { RegisterData, UserData } from '../api/auth';
-import { getStoredAccessToken, getStoredRefreshToken, clearTokens } from '../api/api';
+// src/context/AuthContext.tsx
+import { createContext, useContext, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import { loginUser, registerUser, logoutUser as apiLogout, fetchCurrentUser } from "../api/auth";
+import type { RegisterData, UserData } from "../api/auth";
+import { getStoredAccessToken, getStoredRefreshToken, clearTokens } from "../api/api";
 
 interface AuthContextType {
   user: UserData | null;
   accessToken: string | null;
   loading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
 }
@@ -147,7 +138,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function useAuth(): AuthContextType {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider');
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
 
@@ -157,9 +148,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<UserData | null>(null);
-  const [accessToken, setAccessToken] = useState<string | null>(
-    getStoredAccessToken()
-  );
+  const [accessToken, setAccessToken] = useState<string | null>(getStoredAccessToken());
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -182,10 +171,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     initialize();
   }, []);
 
-  async function login(username: string, password: string) {
+  async function login(identifier: string, password: string) {
     setLoading(true);
     try {
-      const { access } = await loginUser({ username, password });
+      const { access } = await loginUser({ identifier, password });
       setAccessToken(access);
       const userData = await fetchCurrentUser();
       setUser(userData);
@@ -201,9 +190,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function register(data: RegisterData) {
     setLoading(true);
     try {
-      const { tokens, user: registeredUser } = await registerUser(data);
-      setAccessToken(tokens.access);
-      setUser(registeredUser);
+      const { access } = await registerUser(data);
+      setAccessToken(access);
+      const userData = await fetchCurrentUser();
+      setUser(userData);
     } catch (err) {
       setUser(null);
       setAccessToken(null);
