@@ -295,7 +295,7 @@ This project is MIT licensed – see [LICENSE](LICENSE).
 
 ## 19. Contact & Support
 
-- **Backend API Docs**: [Link to Django REST API documentation]  
+- **Backend API Docs**: [Django REST API documentation]  
 - **Issue Tracking**: Create GitHub Issues for bugs/enhancements  
 - **Maintainers**: @team-frontend  
 
